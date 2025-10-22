@@ -14,3 +14,10 @@ logging:
   level:
     root: info
     com.macro.mall: debug
+
+# minio相关配置
+minio:
+  endpoint: http://8.138.199.239:9000
+  accessKey: devuser
+  secretKey: 395773508Asd0019
+  bucketName: my-mall-bucket

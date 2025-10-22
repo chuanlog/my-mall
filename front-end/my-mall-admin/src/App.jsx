@@ -4,6 +4,7 @@ import User from './pages/user/user.jsx'
 import Home from './pages/home/home.jsx'
 import Dashboard from './pages/home/dashboard/dashboard.jsx'
 import axios from 'axios'
+import UsersPage from './pages/home/users/users.jsx'
 
 function App() {
   // 在应用启动时设置axios默认配置
@@ -21,6 +22,7 @@ function App() {
         <Route path="/home" element={<Home/>} >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<UsersPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

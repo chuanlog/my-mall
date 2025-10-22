@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -203,5 +204,75 @@ public class UmsAdminController {
     public CommonResult<List<UmsRole>> getRoleList(@PathVariable Long adminId) {
         List<UmsRole> roleList = adminService.getRoleList(adminId);
         return CommonResult.success(roleList);
+    }
+
+    @ApiOperation("上传用户头像")
+    @RequestMapping(value = "/avatar/upload/{adminId}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<String> uploadAvatar(@PathVariable Long adminId, 
+                                           @RequestParam("file") MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+                return CommonResult.failed("请选择要上传的文件");
+            }
+            
+            // 验证文件大小（限制为5MB）
+            if (file.getSize() > 5 * 1024 * 1024) {
+                return CommonResult.failed("文件大小不能超过5MB");
+            }
+            
+            String avatarUrl = adminService.uploadAvatar(adminId, file);
+            return CommonResult.success(avatarUrl, "头像上传成功");
+        } catch (Exception e) {
+            return CommonResult.failed("头像上传失败: " + e.getMessage());
+        }
+    }
+
+    @ApiOperation("更新用户头像")
+    @RequestMapping(value = "/avatar/update/{adminId}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult updateAvatar(@PathVariable Long adminId, 
+                                   @RequestParam("avatarUrl") String avatarUrl) {
+        try {
+            boolean success = adminService.updateAvatar(adminId, avatarUrl);
+            if (success) {
+                return CommonResult.success(null, "头像更新成功");
+            }
+            return CommonResult.failed("头像更新失败");
+        } catch (Exception e) {
+            return CommonResult.failed("头像更新失败: " + e.getMessage());
+        }
+    }
+
+    @ApiOperation("上传当前登录用户头像")
+    @RequestMapping(value = "/avatar/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<String> uploadCurrentUserAvatar(@RequestParam("file") MultipartFile file, 
+                                                       Principal principal) {
+        try {
+            if (principal == null) {
+                return CommonResult.unauthorized("请先登录");
+            }
+            
+            if (file.isEmpty()) {
+                return CommonResult.failed("请选择要上传的文件");
+            }
+            
+            // 验证文件大小（限制为5MB）
+            if (file.getSize() > 5 * 1024 * 1024) {
+                return CommonResult.failed("文件大小不能超过5MB");
+            }
+            
+            String username = principal.getName();
+            UmsAdmin admin = adminService.getAdminByUsername(username);
+            if (admin == null) {
+                return CommonResult.failed("用户不存在");
+            }
+            
+            String avatarUrl = adminService.uploadAvatar(admin.getId(), file);
+            return CommonResult.success(avatarUrl, "头像上传成功");
+        } catch (Exception e) {
+            return CommonResult.failed("头像上传失败: " + e.getMessage());
+        }
     }
 }

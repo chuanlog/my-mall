@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.macro.mall.tiny.common.exception.Asserts;
+import com.macro.mall.tiny.common.utils.MinioUtil;
 import com.macro.mall.tiny.domain.AdminUserDetails;
 import com.macro.mall.tiny.modules.ums.dto.UmsAdminParam;
 import com.macro.mall.tiny.modules.ums.dto.UpdateAdminPasswordParam;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -59,6 +61,8 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper,UmsAdmin> im
     private UmsRoleMapper roleMapper;
     @Autowired
     private UmsResourceMapper resourceMapper;
+    @Autowired
+    private MinioUtil minioUtil;
 
     @Override
     public UmsAdmin getAdminByUsername(String username) {
@@ -267,5 +271,113 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper,UmsAdmin> im
     @Override
     public UmsAdminCacheService getCacheService() {
         return SpringUtil.getBean(UmsAdminCacheService.class);
+    }
+
+    @Override
+    public String uploadAvatar(Long adminId, MultipartFile file) {
+        try {
+            // 验证用户是否存在
+            UmsAdmin admin = getById(adminId);
+            if (admin == null) {
+                throw new RuntimeException("用户不存在");
+            }
+
+            // 验证文件类型
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                throw new RuntimeException("只能上传图片文件");
+            }
+
+            // 生成文件名：images/icon/用户ID_时间戳.扩展名
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String objectName = "images/icon/" + adminId + "_" + System.currentTimeMillis() + extension;
+
+            // 上传文件到Minio
+            String avatarUrl = minioUtil.uploadFile(file, objectName);
+
+            // 删除旧头像文件（如果存在）
+            if (StrUtil.isNotBlank(admin.getIcon()) && admin.getIcon().contains("images/icon/")) {
+                try {
+                    // 从URL中提取对象名称
+                    String oldObjectName = extractObjectNameFromUrl(admin.getIcon());
+                    if (StrUtil.isNotBlank(oldObjectName)) {
+                        minioUtil.deleteFile(oldObjectName);
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("删除旧头像文件失败: {}", e.getMessage());
+                }
+            }
+
+            // 更新用户头像URL
+            admin.setIcon(avatarUrl);
+            updateById(admin);
+            getCacheService().delAdmin(adminId);
+
+            return avatarUrl;
+        } catch (Exception e) {
+            LOGGER.error("上传头像失败: {}", e.getMessage());
+            throw new RuntimeException("上传头像失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateAvatar(Long adminId, String avatarUrl) {
+        try {
+            UmsAdmin admin = getById(adminId);
+            if (admin == null) {
+                return false;
+            }
+
+            // 删除旧头像文件（如果存在）
+            if (StrUtil.isNotBlank(admin.getIcon()) && admin.getIcon().contains("images/icon/")) {
+                try {
+                    String oldObjectName = extractObjectNameFromUrl(admin.getIcon());
+                    if (StrUtil.isNotBlank(oldObjectName)) {
+                        minioUtil.deleteFile(oldObjectName);
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("删除旧头像文件失败: {}", e.getMessage());
+                }
+            }
+
+            admin.setIcon(avatarUrl);
+            boolean success = updateById(admin);
+            if (success) {
+                getCacheService().delAdmin(adminId);
+            }
+            return success;
+        } catch (Exception e) {
+            LOGGER.error("更新头像失败: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 从URL中提取对象名称
+     * @param url 文件URL
+     * @return 对象名称
+     */
+    private String extractObjectNameFromUrl(String url) {
+        if (StrUtil.isBlank(url)) {
+            return null;
+        }
+        
+        // 如果URL包含images/icon/，提取对象名称
+        int index = url.indexOf("images/icon/");
+        if (index != -1) {
+            // 提取从images/icon/开始到?或结尾的部分
+            String objectName = url.substring(index);
+            int queryIndex = objectName.indexOf("?");
+            if (queryIndex != -1) {
+                objectName = objectName.substring(0, queryIndex);
+            }
+            return objectName;
+        }
+        
+        return null;
     }
 }

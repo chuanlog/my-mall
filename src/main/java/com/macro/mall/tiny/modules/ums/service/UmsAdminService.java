@@ -86,4 +86,20 @@ public interface UmsAdminService extends IService<UmsAdmin> {
      * 获取缓存服务
      */
     UmsAdminCacheService getCacheService();
+
+    /**
+     * 上传用户头像
+     * @param adminId 用户ID
+     * @param file 头像文件
+     * @return 头像URL
+     */
+    String uploadAvatar(Long adminId, org.springframework.web.multipart.MultipartFile file);
+
+    /**
+     * 更新用户头像
+     * @param adminId 用户ID
+     * @param avatarUrl 头像URL
+     * @return 是否成功
+     */
+    boolean updateAvatar(Long adminId, String avatarUrl);
 }

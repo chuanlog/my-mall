@@ -1,0 +1,11 @@
+.users-page {
+  padding: 16px;
+  background: #fff;
+  min-height: 100%;
+}
+
+.users-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}

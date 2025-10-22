@@ -10,12 +10,16 @@ import './home.css'
 import { useNavigate, Outlet } from "react-router";
 import { logout, getCurrentUserInfo } from "../../Mock/api";
 import axios from 'axios';
+import { message } from 'antd';
+import { uploadAvatarForCurrentUser } from '../../Mock/api';
 
 const { Header, Sider, Content } = Layout;
 
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -77,11 +81,56 @@ export default function Home() {
     }
   }
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    setAvatarFile(file || null);
+  };
+
+  const handleUploadAvatar = async () => {
+    if (!avatarFile) {
+      message.warning('请先选择图片文件');
+      return;
+    }
+    if (avatarFile.size > 5 * 1024 * 1024) {
+      message.error('文件大小不能超过5MB');
+      return;
+    }
+    setUploading(true);
+    try {
+      const res = await uploadAvatarForCurrentUser(avatarFile);
+      if (res?.code === 200) {
+        message.success('头像上传成功');
+        setUserInfo(prev => ({ ...(prev || {}), icon: res.data }));
+        setAvatarFile(null);
+      } else {
+        message.error(res?.message || '上传失败');
+      }
+    } catch (e) {
+      message.error(e?.response?.data?.message || '网络错误');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const content = (
     <div className="tooltip">
       <p>用户名：{userInfo?.username || localStorage.getItem("username")}</p>
       <p>角色：{userInfo?.roles?.join(', ') || '普通用户'}</p>
-      <button onClick={handleLogout} className="tooltip-button">退出登录</button>
+      <div style={{ marginTop: 8 }}>
+        <div style={{ marginBottom: 8 }}>
+          <Avatar size={64} src={userInfo?.icon} icon={<UserOutlined />} />
+        </div>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <Button
+          type="primary"
+          style={{ marginTop: 8 }}
+          loading={uploading}
+          onClick={handleUploadAvatar}
+        >
+          上传头像
+        </Button>
+      </div>
+      <button onClick={handleLogout} className="tooltip-button" style={{ marginTop: 8 }}>退出登录</button>
     </div>
   )
 
@@ -100,6 +149,12 @@ export default function Home() {
               icon: <DashboardOutlined />,
               label: '仪表盘',
             },
+            // 新增：用户管理菜单项
+            {
+              key: '/home/users',
+              icon: <UserOutlined />,
+              label: '用户管理',
+            },
           ]}
         />
       </Sider>
@@ -116,7 +171,7 @@ export default function Home() {
             }}
           />
           <Popover content={content} placement="leftTop" trigger="hover">
-            <Avatar className="avatar" size={50} icon={<UserOutlined />} />
+            <Avatar className="avatar" size={50} src={userInfo?.icon} icon={<UserOutlined />} />
           </Popover>
         </Header>
         <Content
