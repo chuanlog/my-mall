@@ -1,0 +1,49 @@
+.dashboard-container {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100%;
+}
+
+.dashboard-container .ant-typography-title {
+  text-align: center;
+  color: #1890ff;
+  margin-bottom: 0;
+}
+
+.dashboard-container .ant-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.dashboard-container .ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.dashboard-container .ant-card-head-title {
+  color: #1890ff;
+  font-weight: 600;
+}
+
+.dashboard-container .ant-typography {
+  margin-bottom: 0;
+}
+
+.dashboard-container .ant-card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dashboard-container .ant-card-meta-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dashboard-container .ant-card-meta-description {
+  color: #666;
+}
+
+.dashboard-container .ant-typography h4 {
+  margin-bottom: 8px;
+}
