@@ -297,3 +297,218 @@ export const updateAvatarUrlForAdmin = async (adminId, avatarUrl) => {
     throw error;
   }
 }
+
+
+// 资源分类：查询全部
+export const listAllResourceCategories = async () => {
+  try {
+    const response = await axios.get('/resourceCategory/listAll');
+    return response.data;
+  } catch (error) {
+    console.error('获取全部资源分类失败:', error);
+    throw error;
+  }
+}
+
+// 资源分类：创建
+export const createResourceCategory = async (category) => {
+  try {
+    const response = await axios.post('/resourceCategory/create', category);
+    return response.data;
+  } catch (error) {
+    console.error('创建资源分类失败:', error);
+    throw error;
+  }
+}
+
+// 资源分类：更新
+export const updateResourceCategory = async (id, category) => {
+  try {
+    const response = await axios.post(`/resourceCategory/update/${id}`, category);
+    return response.data;
+  } catch (error) {
+    console.error('更新资源分类失败:', error);
+    throw error;
+  }
+}
+
+// 资源分类：删除
+export const deleteResourceCategory = async (id) => {
+  try {
+    const response = await axios.post(`/resourceCategory/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('删除资源分类失败:', error);
+    throw error;
+  }
+}
+
+// 资源：分页模糊查询
+export const listResources = async ({ categoryId, nameKeyword, urlKeyword, pageSize = 5, pageNum = 1 }) => {
+  try {
+    const response = await axios.get('/resource/list', {
+      params: { categoryId, nameKeyword, urlKeyword, pageSize, pageNum }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('查询资源列表失败:', error);
+    throw error;
+  }
+}
+
+// 资源：创建
+export const createResource = async (resource) => {
+  try {
+    const response = await axios.post('/resource/create', resource);
+    return response.data;
+  } catch (error) {
+    console.error('创建资源失败:', error);
+    throw error;
+  }
+}
+
+// 资源：更新
+export const updateResource = async (id, resource) => {
+  try {
+    const response = await axios.post(`/resource/update/${id}`, resource);
+    return response.data;
+  } catch (error) {
+    console.error('更新资源失败:', error);
+    throw error;
+  }
+}
+
+// 资源：按ID获取
+export const getResourceById = async (id) => {
+  try {
+    const response = await axios.get(`/resource/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('获取资源详情失败:', error);
+    throw error;
+  }
+}
+
+// 资源：删除
+export const deleteResource = async (id) => {
+  try {
+    const response = await axios.post(`/resource/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('删除资源失败:', error);
+    throw error;
+  }
+}
+
+// 资源：查询全部（可用于下拉等）
+export const listAllResources = async () => {
+  try {
+    const response = await axios.get('/resource/listAll');
+    return response.data;
+  } catch (error) {
+    console.error('获取全部资源失败:', error);
+    throw error;
+  }
+}
+
+
+// 角色：创建
+export const createRole = async (role) => {
+  try {
+    const response = await axios.post('/role/create', role);
+    return response.data;
+  } catch (error) {
+    console.error('创建角色失败:', error);
+    throw error;
+  }
+}
+
+// 角色：更新
+export const updateRole = async (id, role) => {
+  try {
+    const response = await axios.post(`/role/update/${id}`, role);
+    return response.data;
+  } catch (error) {
+    console.error('更新角色失败:', error);
+    throw error;
+  }
+}
+
+// 角色：批量删除（支持传单个ID）
+export const deleteRoles = async (ids) => {
+  try {
+    const response = await axios.post('/role/delete', null, {
+      params: { ids }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('删除角色失败:', error);
+    throw error;
+  }
+}
+
+// 角色：分页列表（模糊查询）
+export const listRoles = async ({ keyword = '', pageSize = 5, pageNum = 1 }) => {
+  try {
+    const response = await axios.get('/role/list', { params: { keyword, pageSize, pageNum } });
+    return response.data;
+  } catch (error) {
+    console.error('查询角色列表失败:', error);
+    throw error;
+  }
+}
+
+// 角色：更新状态
+export const updateRoleStatus = async (id, status) => {
+  try {
+    const response = await axios.post(`/role/updateStatus/${id}`, null, { params: { status } });
+    return response.data;
+  } catch (error) {
+    console.error('更新角色状态失败:', error);
+    throw error;
+  }
+}
+
+// 角色：查询关联菜单
+export const listRoleMenus = async (roleId) => {
+  try {
+    const response = await axios.get(`/role/listMenu/${roleId}`);
+    return response.data;
+  } catch (error) {
+    console.error('查询角色关联菜单失败:', error);
+    throw error;
+  }
+}
+
+// 角色：查询关联资源
+export const listRoleResources = async (roleId) => {
+  try {
+    const response = await axios.get(`/role/listResource/${roleId}`);
+    return response.data;
+  } catch (error) {
+    console.error('查询角色关联资源失败:', error);
+    throw error;
+  }
+}
+
+// 角色：分配菜单
+export const allocRoleMenus = async (roleId, menuIds) => {
+  try {
+    const response = await axios.post('/role/allocMenu', null, { params: { roleId, menuIds } });
+    return response.data;
+  } catch (error) {
+    console.error('分配角色菜单失败:', error);
+    throw error;
+  }
+}
+
+// 角色：分配资源
+export const allocRoleResources = async (roleId, resourceIds) => {
+  try {
+    const response = await axios.post('/role/allocResource', null, { params: { roleId, resourceIds } });
+    return response.data;
+  } catch (error) {
+    console.error('分配角色资源失败:', error);
+    throw error;
+  }
+}

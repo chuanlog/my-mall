@@ -149,11 +149,20 @@ export default function Home() {
               icon: <DashboardOutlined />,
               label: '仪表盘',
             },
-            // 新增：用户管理菜单项
             {
               key: '/home/users',
               icon: <UserOutlined />,
               label: '用户管理',
+            },
+            {
+              key: '/home/resources',
+              icon: <DashboardOutlined />,
+              label: '资源管理',
+            },
+            {
+              key: '/home/roles',
+              icon: <UserOutlined />,
+              label: '角色管理',
             },
           ]}
         />
