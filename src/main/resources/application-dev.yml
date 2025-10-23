@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/mall_tiny?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
-    username:
-    password:
+    url: jdbc:mysql://8.138.199.239:3306/mall_tiny?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: devuser
+    password: 395773508Asd0019
   redis:
-    host:  # Redis服务器地址
-    database:  # Redis数据库索引（默认为0）
-    port:  # Redis服务器连接端口
-    password:  # Redis服务器连接密码（默认为空）
-    timeout:  # 连接超时时间（毫秒）
+    host: 8.138.199.239 # Redis服务器地址
+    database: 0 # Redis数据库索引（默认为0）
+    port: 6379 # Redis服务器连接端口
+    password: 395773508Asd0019 # Redis服务器连接密码（默认为空）
+    timeout: 3000ms # 连接超时时间（毫秒）
 
 logging:
   level:
@@ -17,7 +17,7 @@ logging:
 
 # minio相关配置
 minio:
-  endpoint:
-  accessKey:
-  secretKey:
-  bucketName:
+  endpoint: http://8.138.199.239:9000
+  accessKey: devuser
+  secretKey: 395773508Asd0019
+  bucketName: my-mall-bucket
