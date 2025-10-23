@@ -32,4 +32,3 @@ HELP.md
 .gradle
 
 ###　配置文件 ###
-src/main/resources/application-dev.yml
