@@ -19,4 +19,20 @@ public interface PmsProductCategoryService extends IService<PmsProductCategory> 
     boolean delete(List<Long> ids);
 
     Page<PmsProductCategory> list(String keyword, Integer pageSize, Integer pageNum);
+
+    /**
+     * 上传商品分类图片
+     * @param categoryId 分类ID
+     * @param file 图片文件
+     * @return 图片URL
+     */
+    String uploadImage(Long categoryId, org.springframework.web.multipart.MultipartFile file);
+
+    /**
+     * 更新商品分类图片
+     * @param categoryId 分类ID
+     * @param imageUrl 图片URL
+     * @return 是否成功
+     */
+    boolean updateImage(Long categoryId, String imageUrl);
 }

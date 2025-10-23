@@ -51,4 +51,81 @@ public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategor
         lambda.orderByAsc(PmsProductCategory::getSort).orderByDesc(PmsProductCategory::getUpdateTime);
         return page(page, wrapper);
     }
+
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.macro.mall.tiny.common.utils.MinioUtil minioUtil;
+
+    @Override
+    public String uploadImage(Long categoryId, org.springframework.web.multipart.MultipartFile file) {
+        try {
+            PmsProductCategory category = getById(categoryId);
+            if (category == null) {
+                throw new RuntimeException("商品分类不存在");
+            }
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                throw new RuntimeException("只能上传图片文件");
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String objectName = "images/category/" + categoryId + "_" + System.currentTimeMillis() + extension;
+
+            String url = minioUtil.uploadFile(file, objectName);
+
+            // 删除旧图片（如果存在且属于本模块路径）
+            if (cn.hutool.core.util.StrUtil.isNotBlank(category.getImage())) {
+                String oldObjectName = extractObjectNameFromUrl(category.getImage(), "images/category/");
+                if (cn.hutool.core.util.StrUtil.isNotBlank(oldObjectName)) {
+                    minioUtil.deleteFile(oldObjectName);
+                }
+            }
+
+            category.setImage(url);
+            updateById(category);
+            return url;
+        } catch (Exception e) {
+            throw new RuntimeException("上传分类图片失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateImage(Long categoryId, String imageUrl) {
+        try {
+            PmsProductCategory category = getById(categoryId);
+            if (category == null) {
+                return false;
+            }
+            // 删除旧图片（如果存在且属于本模块路径）
+            if (cn.hutool.core.util.StrUtil.isNotBlank(category.getImage())) {
+                String oldObjectName = extractObjectNameFromUrl(category.getImage(), "images/category/");
+                if (cn.hutool.core.util.StrUtil.isNotBlank(oldObjectName)) {
+                    minioUtil.deleteFile(oldObjectName);
+                }
+            }
+            category.setImage(imageUrl);
+            return updateById(category);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private String extractObjectNameFromUrl(String url, String prefix) {
+        if (cn.hutool.core.util.StrUtil.isBlank(url)) {
+            return null;
+        }
+        int index = url.indexOf(prefix);
+        if (index != -1) {
+            String objectName = url.substring(index);
+            int queryIndex = objectName.indexOf("?");
+            if (queryIndex != -1) {
+                objectName = objectName.substring(0, queryIndex);
+            }
+            return objectName;
+        }
+        return null;
+    }
 }
