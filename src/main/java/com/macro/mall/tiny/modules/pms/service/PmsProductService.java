@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 商品表 服务类
  * </p>
  *
- * @author macro
+ * @author cloog
  * @since 2025-10-23
  */
 public interface PmsProductService extends IService<PmsProduct> {

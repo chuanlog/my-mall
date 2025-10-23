@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 商品表 前端控制器
  * </p>
  *
- * @author macro
+ * @author cloog
  * @since 2025-10-23
  */
 @Controller

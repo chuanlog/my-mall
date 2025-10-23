@@ -16,7 +16,7 @@ import lombok.Setter;
  * 商品表
  * </p>
  *
- * @author macro
+ * @author cloog
  * @since 2025-10-23
  */
 @Getter

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 商品表 服务实现类
  * </p>
  *
- * @author macro
+ * @author cloog
  * @since 2025-10-23
  */
 @Service
