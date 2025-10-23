@@ -505,7 +505,20 @@ export const listRoleResources = async (roleId) => {
 // 角色：分配菜单
 export const allocRoleMenus = async (roleId, menuIds) => {
   try {
-    const response = await axios.post('/role/allocMenu', null, { params: { roleId, menuIds } });
+    const response = await axios.post('/role/allocMenu', null, {
+      params: { roleId, menuIds },
+      paramsSerializer: params => {
+        const usp = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            value.forEach(v => usp.append(key, v));
+          } else if (value !== undefined && value !== null) {
+            usp.append(key, value);
+          }
+        });
+        return usp.toString();
+      }
+    });
     return response.data;
   } catch (error) {
     console.error('分配角色菜单失败:', error);
@@ -516,7 +529,20 @@ export const allocRoleMenus = async (roleId, menuIds) => {
 // 角色：分配资源
 export const allocRoleResources = async (roleId, resourceIds) => {
   try {
-    const response = await axios.post('/role/allocResource', null, { params: { roleId, resourceIds } });
+    const response = await axios.post('/role/allocResource', null, {
+      params: { roleId, resourceIds },
+      paramsSerializer: params => {
+        const usp = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            value.forEach(v => usp.append(key, v));
+          } else if (value !== undefined && value !== null) {
+            usp.append(key, value);
+          }
+        });
+        return usp.toString();
+      }
+    });
     return response.data;
   } catch (error) {
     console.error('分配角色资源失败:', error);

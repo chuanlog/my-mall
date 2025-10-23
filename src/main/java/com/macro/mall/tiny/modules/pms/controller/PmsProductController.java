@@ -8,6 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.macro.mall.tiny.common.api.CommonPage;
+import com.macro.mall.tiny.common.api.CommonResult;
+import com.macro.mall.tiny.modules.pms.model.PmsProduct;
+import com.macro.mall.tiny.modules.pms.service.PmsProductService;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.math.BigDecimal;
+
 /**
  * <p>
  * 商品表 前端控制器
@@ -22,5 +34,95 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/pms/product")
 public class PmsProductController {
 
+    @Autowired
+    private PmsProductService productService;
+
+    @ApiOperation("创建商品")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult create(@RequestBody PmsProduct product) {
+        boolean success = productService.create(product);
+        if (success) {
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("更新商品")
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult update(@PathVariable Long id, @RequestBody PmsProduct product) {
+        product.setId(id);
+        boolean success = productService.updateById(product);
+        if (success) {
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("批量删除商品")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult delete(@RequestParam("ids") List<Long> ids) {
+        boolean success = productService.delete(ids);
+        if (success) {
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("根据名称/分类/状态/价格区间分页获取商品列表")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<CommonPage<PmsProduct>> list(@RequestParam(value = "keyword", required = false) String keyword,
+                                                     @RequestParam(value = "categoryId", required = false) Long categoryId,
+                                                     @RequestParam(value = "status", required = false) Boolean status,
+                                                     @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+                                                     @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+                                                     @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                                     @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        Page<PmsProduct> page = productService.list(keyword, categoryId, status, minPrice, maxPrice, pageSize, pageNum);
+        return CommonResult.success(CommonPage.restPage(page));
+    }
+
+    @ApiOperation("获取商品详情")
+    @RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<PmsProduct> item(@PathVariable Long id) {
+        PmsProduct product = productService.getById(id);
+        return CommonResult.success(product);
+    }
+
+    @ApiOperation("修改商品状态")
+    @RequestMapping(value = "/updateStatus/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult updateStatus(@PathVariable Long id, @RequestParam("status") Boolean status) {
+        PmsProduct update = new PmsProduct();
+        update.setId(id);
+        update.setStatus(status);
+        boolean success = productService.updateById(update);
+        if (success) {
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("根据分类分页获取商品列表")
+    @RequestMapping(value = "/listByCategory/{categoryId}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<CommonPage<PmsProduct>> listByCategory(@PathVariable Long categoryId,
+                                                               @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                                               @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        Page<PmsProduct> page = productService.list(null, categoryId, null, null, null, pageSize, pageNum);
+        return CommonResult.success(CommonPage.restPage(page));
+    }
+
+    @ApiOperation("获取所有商品")
+    @RequestMapping(value = "/listAll", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<PmsProduct>> listAll() {
+        List<PmsProduct> list = productService.list();
+        return CommonResult.success(list);
+    }
 }
 
