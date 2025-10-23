@@ -164,6 +164,16 @@ export default function Home() {
               icon: <UserOutlined />,
               label: '角色管理',
             },
+            {
+              key: '/home/products',
+              icon: <DashboardOutlined />,
+              label: '商品管理',
+            },
+            {
+              key: '/home/product-categories',
+              icon: <DashboardOutlined />,
+              label: '商品分类管理',
+            },
           ]}
         />
       </Sider>

@@ -7,6 +7,8 @@ import axios from 'axios'
 import UsersPage from './pages/home/users/users.jsx'
 import RolesPage from './pages/home/roles/roles.jsx'
 import ResourceManagePage from './pages/home/resources/manage.jsx'
+import ProductsPage from './pages/home/products/products.jsx'
+import ProductCategoriesPage from './pages/home/productCategories/productCategories.jsx'
 
 function App() {
   // 在应用启动时设置axios默认配置
@@ -29,6 +31,9 @@ function App() {
           <Route path="resources" element={<ResourceManagePage />} />
           <Route path="resource-categories" element={<ResourceManagePage />} />
           <Route path="roles" element={<RolesPage />} />
+          {/* 新增：商品管理与商品分类管理 */}
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="product-categories" element={<ProductCategoriesPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
