@@ -223,7 +223,18 @@ export const updateAdminStatus = async (id, status) => {
 export const updateAdminRole = async (adminId, roleIds) => {
   try {
     const response = await axios.post(`/admin/role/update`, null, {
-      params: { adminId, roleIds }
+      params: { adminId, roleIds },
+      paramsSerializer: params => {
+        const usp = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            value.forEach(v => usp.append(key, v));
+          } else if (value !== undefined && value !== null) {
+            usp.append(key, value);
+          }
+        });
+        return usp.toString();
+      }
     });
     return response.data;
   } catch (error) {
@@ -236,7 +247,7 @@ export const updateAdminRole = async (adminId, roleIds) => {
 export const getAdminRoles = async (adminId) => {
   try {
     const response = await axios.get(`/admin/role/${adminId}`);
-  return response.data;
+    return response.data;
   } catch (error) {
     console.error('获取用户角色失败:', error);
     throw error;
