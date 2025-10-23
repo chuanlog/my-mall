@@ -1,7 +1,7 @@
 import React from "react";
 import './user.css'
 import {useState,useEffect} from 'react'
-import { accountLogin,accountRegister } from "../../Mock/api";
+import { accountLogin,accountRegister } from "../../api";
 import { useNavigate } from "react-router";
 import axios from 'axios';
 

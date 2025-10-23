@@ -4,7 +4,7 @@ import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { 
   listResources, createResource, updateResource, deleteResource, getResourceById,
   listAllResourceCategories, createResourceCategory, updateResourceCategory, deleteResourceCategory
-} from '../../../Mock/api';
+} from '../../../api';
 import { useLocation } from 'react-router';
 
 function ResourceListTab() {

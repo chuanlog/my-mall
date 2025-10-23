@@ -4,7 +4,7 @@ import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { 
   listResources, createResource, updateResource, deleteResource, getResourceById,
   listAllResourceCategories
-} from '../../../Mock/api';
+} from '../../../api';
 
 export default function ResourceListPage() {
   const [loading, setLoading] = useState(false);

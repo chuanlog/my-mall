@@ -2,9 +2,7 @@ import axios from 'axios';
 
 export const API_BASE_URL = 'http://localhost:8080';
 
-const http = axios.create({
-  baseURL: API_BASE_URL
-});
+axios.defaults.baseURL = API_BASE_URL;
 
 // 统一的数组友好序列化器（与现有用法一致）
 export const serializeParams = (params) => {
@@ -19,4 +17,4 @@ export const serializeParams = (params) => {
   return usp.toString();
 };
 
-export default http;
+export default axios;

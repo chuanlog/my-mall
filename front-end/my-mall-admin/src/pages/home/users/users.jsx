@@ -5,8 +5,8 @@ import './users.css';
 import { 
   listAdmins, getAdminById, updateAdmin, deleteAdmin, 
   updateAdminStatus, getAdminRoles, updateAdminRole, listAllRoles 
-} from '../../../Mock/api';
-import { uploadAvatarForAdmin, updateAvatarUrlForAdmin } from '../../../Mock/api';
+} from '../../../api';
+import { uploadAvatarForAdmin, updateAvatarUrlForAdmin } from '../../../api';
 
 export default function UsersPage() {
   const [loading, setLoading] = useState(false);

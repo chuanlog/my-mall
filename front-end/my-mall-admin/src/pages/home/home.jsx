@@ -8,10 +8,10 @@ import {
 import { Button, Layout, Menu, theme, Popover, Avatar } from 'antd';
 import './home.css'
 import { useNavigate, Outlet } from "react-router";
-import { logout, getCurrentUserInfo } from "../../Mock/api";
+import { logout, getCurrentUserInfo } from "../../api";
 import axios from 'axios';
 import { message } from 'antd';
-import { uploadAvatarForCurrentUser } from '../../Mock/api';
+import { uploadAvatarForCurrentUser } from '../../api';
 
 const { Header, Sider, Content } = Layout;
 

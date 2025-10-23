@@ -5,7 +5,7 @@ import {
   listRoles, createRole, updateRole, deleteRoles, updateRoleStatus,
   listRoleResources, allocRoleResources,
   listAllResources
-} from '../../../Mock/api';
+} from '../../../api';
 
 export default function RolesPage() {
   const [loading, setLoading] = useState(false);

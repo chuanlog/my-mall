@@ -3,7 +3,7 @@ import { Table, Input, Button, Space, Modal, Form, Popconfirm, message } from 'a
 import { PlusOutlined } from '@ant-design/icons';
 import { 
   listAllResourceCategories, createResourceCategory, updateResourceCategory, deleteResourceCategory
-} from '../../../Mock/api';
+} from '../../../api';
 
 export default function ResourceCategoriesPage() {
   const [loading, setLoading] = useState(false);
