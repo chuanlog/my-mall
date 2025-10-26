@@ -41,7 +41,13 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
 
     @Override
     public boolean delete(List<Long> ids) {
-        return removeByIds(ids);
+        boolean success = removeByIds(ids);
+        if (success && ids != null) {
+            for (Long id : ids) {
+                getCacheService().delProduct(id);
+            }
+        }
+        return success;
     }
 
     @Override
@@ -140,5 +146,33 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
             return objectName;
         }
         return null;
+    }
+
+    // 引入缓存服务获取（模仿 ums 使用 SpringUtil 避免循环依赖）
+    private com.macro.mall.tiny.modules.pms.service.PmsCacheService getCacheService() {
+        return com.macro.mall.tiny.security.util.SpringUtil.getBean(com.macro.mall.tiny.modules.pms.service.PmsCacheService.class);
+    }
+
+    @Override
+    public PmsProduct getProductById(Long id) {
+        PmsProduct cached = getCacheService().getProduct(id);
+        if (cached != null) {
+            return cached;
+        }
+        PmsProduct db = getById(id);
+        if (db != null) {
+            getCacheService().setProduct(db);
+        }
+        return db;
+    }
+
+    @Override
+    public boolean updateProduct(Long id, PmsProduct product) {
+        product.setId(id);
+        boolean success = updateById(product);
+        if (success) {
+            getCacheService().delProduct(id);
+        }
+        return success;
     }
 }

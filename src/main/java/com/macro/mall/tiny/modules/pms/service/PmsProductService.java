@@ -37,4 +37,8 @@ public interface PmsProductService extends IService<PmsProduct> {
      * @return 是否成功
      */
     boolean updateImage(Long productId, String imageUrl);
+
+    // 新增：带缓存的获取与更新
+    PmsProduct getProductById(Long id);
+    boolean updateProduct(Long id, PmsProduct product);
 }

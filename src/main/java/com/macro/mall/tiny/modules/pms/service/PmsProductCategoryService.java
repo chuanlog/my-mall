@@ -36,4 +36,9 @@ public interface PmsProductCategoryService extends IService<PmsProductCategory> 
      * @return 是否成功
      */
     boolean updateImage(Long categoryId, String imageUrl);
+
+    // 新增：带缓存的获取与更新，及列表缓存
+    PmsProductCategory getCategoryById(Long id);
+    List<PmsProductCategory> listAllCached();
+    boolean updateCategory(Long id, PmsProductCategory category);
 }

@@ -1,6 +1,5 @@
 package com.macro.mall.tiny.modules.pms.controller;
 
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.macro.mall.tiny.common.api.CommonPage;
 import com.macro.mall.tiny.common.api.CommonResult;
@@ -48,8 +47,7 @@ public class PmsProductController {
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult update(@PathVariable Long id, @RequestBody PmsProduct product) {
-        product.setId(id);
-        boolean success = productService.updateById(product);
+        boolean success = productService.updateProduct(id, product);
         if (success) {
             return CommonResult.success(null);
         }
@@ -85,7 +83,7 @@ public class PmsProductController {
     @RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<PmsProduct> item(@PathVariable Long id) {
-        PmsProduct product = productService.getById(id);
+        PmsProduct product = productService.getProductById(id);
         return CommonResult.success(product);
     }
 

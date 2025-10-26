@@ -24,6 +24,11 @@ import java.util.List;
 @Service
 public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategoryMapper, PmsProductCategory> implements PmsProductCategoryService {
 
+    // 引入缓存服务获取
+    private com.macro.mall.tiny.modules.pms.service.PmsCacheService getCacheService() {
+        return com.macro.mall.tiny.security.util.SpringUtil.getBean(com.macro.mall.tiny.modules.pms.service.PmsCacheService.class);
+    }
+
     @Override
     public boolean create(PmsProductCategory category) {
         Date now = new Date();
@@ -32,24 +37,75 @@ public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategor
         if (category.getSort() == null) {
             category.setSort(0);
         }
-        return save(category);
+        boolean success = save(category);
+        if (success) {
+            // 新增后清理全量列表缓存
+            getCacheService().delCategoryListAll();
+        }
+        return success;
     }
 
     @Override
     public boolean delete(List<Long> ids) {
-        return removeByIds(ids);
+        boolean success = removeByIds(ids);
+        if (success && ids != null) {
+            for (Long id : ids) {
+                getCacheService().delCategory(id);
+            }
+            getCacheService().delCategoryListAll();
+        }
+        return success;
     }
 
     @Override
     public Page<PmsProductCategory> list(String keyword, Integer pageSize, Integer pageNum) {
+        // 保持原分页查询逻辑（不做复杂条件缓存）
         Page<PmsProductCategory> page = new Page<>(pageNum, pageSize);
         QueryWrapper<PmsProductCategory> wrapper = new QueryWrapper<>();
         LambdaQueryWrapper<PmsProductCategory> lambda = wrapper.lambda();
-        if (StrUtil.isNotEmpty(keyword)) {
+        if (cn.hutool.core.util.StrUtil.isNotEmpty(keyword)) {
             lambda.like(PmsProductCategory::getName, keyword);
         }
         lambda.orderByAsc(PmsProductCategory::getSort).orderByDesc(PmsProductCategory::getUpdateTime);
         return page(page, wrapper);
+    }
+
+    @Override
+    public PmsProductCategory getCategoryById(Long id) {
+        PmsProductCategory cached = getCacheService().getCategory(id);
+        if (cached != null) {
+            return cached;
+        }
+        PmsProductCategory db = getById(id);
+        if (db != null) {
+            getCacheService().setCategory(db);
+        }
+        return db;
+    }
+
+    @Override
+    public List<PmsProductCategory> listAllCached() {
+        List<PmsProductCategory> cached = getCacheService().getCategoryListAll();
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
+        List<PmsProductCategory> all = list();
+        if (all != null && !all.isEmpty()) {
+            getCacheService().setCategoryListAll(all);
+        }
+        return all;
+    }
+
+    @Override
+    public boolean updateCategory(Long id, PmsProductCategory category) {
+        category.setId(id);
+        boolean success = updateById(category);
+        if (success) {
+            // 更新后清理对应分类缓存以及全量列表缓存
+            getCacheService().delCategory(id);
+            getCacheService().delCategoryListAll();
+        }
+        return success;
     }
 
     @org.springframework.beans.factory.annotation.Autowired
