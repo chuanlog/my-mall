@@ -2,18 +2,16 @@ package com.macro.mall.tiny.modules.oms.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-public class AddShoppingCartDTO {
+public class UpdateCartItemDTO {
     @NotNull
     @ApiModelProperty(value = "商品id", required = true)
-    Long productId;
+    private Long productId;
 
     @NotNull
-    @ApiModelProperty(value = "商品数量", required = true)
-    Integer quantity;
+    @ApiModelProperty(value = "设定的商品数量", required = true)
+    private Integer quantity;
 }
