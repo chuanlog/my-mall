@@ -55,7 +55,7 @@ public class MyBatisPlusGenerator {
     private static GlobalConfig initGlobalConfig(String projectPath) {
         return new GlobalConfig.Builder()
                 .outputDir(projectPath + "/src/main/java")
-                .author("macro")
+                .author("cloog")
                 .disableOpenDir()
                 .enableSwagger()
                 .fileOverride()
@@ -93,8 +93,10 @@ public class MyBatisPlusGenerator {
      * 初始化模板配置
      */
     private static TemplateConfig initTemplateConfig() {
-        //可以对controller、service、entity模板进行配置
-        return new TemplateConfig.Builder().build();
+        // 使用自定义的控制器模板，生成符合 UmsAdminController 风格的 Controller
+        return new TemplateConfig.Builder()
+                .controller("/templates/controller.java.vm")
+                .build();
     }
 
     /**
@@ -115,7 +117,7 @@ public class MyBatisPlusGenerator {
                 .formatServiceFileName("%sService")
                 .formatServiceImplFileName("%sServiceImpl")
                 .controllerBuilder()
-                .enableRestStyle()
+                // 使用自定义模板生成 @Controller 风格，不启用 Rest 风格
                 .formatFileName("%sController");
         //当表名中带*号时可以启用通配符模式
         if (tableNames.length == 1 && tableNames[0].contains("*")) {

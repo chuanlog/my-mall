@@ -1,0 +1,26 @@
+package ${package.Controller};
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import ${package.Service}.${table.serviceName};
+
+/**
+ * ${table.comment} 控制器
+ * Created by  ${author} on ${date}
+ */
+@Api(tags = "${table.controllerName}")
+@Tag(name = "${table.controllerName}", description = "")
+@Controller
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+public class ${table.controllerName} {
+
+    @Autowired
+    private ${table.serviceName} ${table.entityPath}Service;
+
+}

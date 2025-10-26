@@ -113,35 +113,35 @@ public class PmsProductCategoryController {
     @ApiOperation("上传商品分类图片")
     @RequestMapping(value = "/image/upload/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public com.macro.mall.tiny.common.api.CommonResult<String> uploadImage(@PathVariable Long id,
+    public CommonResult<String> uploadImage(@PathVariable Long id,
                                                                            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
         try {
             if (file.isEmpty()) {
-                return com.macro.mall.tiny.common.api.CommonResult.failed("请选择要上传的文件");
+                return CommonResult.failed("请选择要上传的文件");
             }
             if (file.getSize() > 5 * 1024 * 1024) {
-                return com.macro.mall.tiny.common.api.CommonResult.failed("文件大小不能超过5MB");
+                return CommonResult.failed("文件大小不能超过5MB");
             }
             String url = categoryService.uploadImage(id, file);
-            return com.macro.mall.tiny.common.api.CommonResult.success(url, "图片上传成功");
+            return CommonResult.success(url, "图片上传成功");
         } catch (Exception e) {
-            return com.macro.mall.tiny.common.api.CommonResult.failed("图片上传失败: " + e.getMessage());
+            return CommonResult.failed("图片上传失败: " + e.getMessage());
         }
     }
 
     @ApiOperation("更新商品分类图片")
     @RequestMapping(value = "/image/update/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public com.macro.mall.tiny.common.api.CommonResult updateImage(@PathVariable Long id,
+    public CommonResult updateImage(@PathVariable Long id,
                                                                    @RequestParam("imageUrl") String imageUrl) {
         try {
             boolean success = categoryService.updateImage(id, imageUrl);
             if (success) {
-                return com.macro.mall.tiny.common.api.CommonResult.success(null, "图片更新成功");
+                return CommonResult.success(null, "图片更新成功");
             }
-            return com.macro.mall.tiny.common.api.CommonResult.failed("图片更新失败");
+            return CommonResult.failed("图片更新失败");
         } catch (Exception e) {
-            return com.macro.mall.tiny.common.api.CommonResult.failed("图片更新失败: " + e.getMessage());
+            return CommonResult.failed("图片更新失败: " + e.getMessage());
         }
     }
 }
