@@ -59,4 +59,8 @@ public class AdminUserDetails implements UserDetails {
     public boolean isEnabled() {
         return umsAdmin.getStatus().equals(1);
     }
+    // 直接暴露当前登录用户ID，便于业务层使用
+    public Long getId() {
+        return umsAdmin.getId();
+    }
 }

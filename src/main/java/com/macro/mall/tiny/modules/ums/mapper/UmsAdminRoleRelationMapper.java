@@ -1,12 +1,7 @@
 package com.macro.mall.tiny.modules.ums.mapper;
 
-import com.macro.mall.tiny.modules.ums.model.UmsAdminRoleRelation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.macro.mall.tiny.modules.ums.model.UmsResource;
-import com.macro.mall.tiny.modules.ums.model.UmsRole;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import com.macro.mall.tiny.modules.ums.model.UmsAdminRoleRelation;
 
 /**
  * <p>

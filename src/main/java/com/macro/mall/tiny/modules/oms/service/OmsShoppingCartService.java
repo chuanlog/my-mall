@@ -1,7 +1,8 @@
 package com.macro.mall.tiny.modules.oms.service;
 
-import com.macro.mall.tiny.modules.oms.model.OmsShoppingCart;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.macro.mall.tiny.modules.oms.dto.AddShoppingCartDTO;
+import com.macro.mall.tiny.modules.oms.model.OmsShoppingCart;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OmsShoppingCartService extends IService<OmsShoppingCart> {
 
+    boolean add(AddShoppingCartDTO addShoppingCartDTO);
 }

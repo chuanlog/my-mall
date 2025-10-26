@@ -1,7 +1,7 @@
 package com.macro.mall.tiny.modules.oms.mapper;
 
-import com.macro.mall.tiny.modules.oms.model.OmsOrderAddress;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.macro.mall.tiny.modules.oms.model.OmsOrderAddress;
 
 /**
  * <p>

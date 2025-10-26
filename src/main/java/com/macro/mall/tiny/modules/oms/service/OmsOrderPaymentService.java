@@ -1,7 +1,7 @@
 package com.macro.mall.tiny.modules.oms.service;
 
-import com.macro.mall.tiny.modules.oms.model.OmsOrderPayment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.macro.mall.tiny.modules.oms.model.OmsOrderPayment;
 
 /**
  * <p>
