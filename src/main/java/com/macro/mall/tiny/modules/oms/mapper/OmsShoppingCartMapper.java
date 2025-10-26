@@ -1,6 +1,6 @@
 package com.macro.mall.tiny.modules.oms.mapper;
 
-import com.macro.mall.tiny.modules.oms.model.OmsCart;
+import com.macro.mall.tiny.modules.oms.model.OmsShoppingCart;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author cloog
  * @since 2025-10-26
  */
-public interface OmsCartMapper extends BaseMapper<OmsCart> {
+public interface OmsShoppingCartMapper extends BaseMapper<OmsShoppingCart> {
 
 }

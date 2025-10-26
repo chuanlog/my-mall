@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import com.macro.mall.tiny.modules.oms.service.OmsCartService;
+import com.macro.mall.tiny.modules.oms.service.OmsShoppingCartService;
 
 /**
  * 购物车表 控制器
  * Created by  cloog on 2025-10-26
  */
-@Api(tags = "OmsCartController")
-@Tag(name = "OmsCartController", description = "")
+@Api(tags = "OmsShoppingCartController")
+@Tag(name = "OmsShoppingCartController", description = "")
 @Controller
-@RequestMapping("/oms/omsCart")
-public class OmsCartController {
+@RequestMapping("/oms/omsShoppingCart")
+public class OmsShoppingCartController {
 
     @Autowired
-    private OmsCartService omsCartService;
+    private OmsShoppingCartService omsShoppingCartService;
 
 }

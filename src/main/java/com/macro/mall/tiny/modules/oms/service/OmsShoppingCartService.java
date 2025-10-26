@@ -1,6 +1,6 @@
 package com.macro.mall.tiny.modules.oms.service;
 
-import com.macro.mall.tiny.modules.oms.model.OmsCart;
+import com.macro.mall.tiny.modules.oms.model.OmsShoppingCart;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author cloog
  * @since 2025-10-26
  */
-public interface OmsCartService extends IService<OmsCart> {
+public interface OmsShoppingCartService extends IService<OmsShoppingCart> {
 
 }

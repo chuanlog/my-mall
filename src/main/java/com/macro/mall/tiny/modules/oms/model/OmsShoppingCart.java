@@ -21,9 +21,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName("oms_cart")
-@ApiModel(value = "OmsCart对象", description = "购物车表")
-public class OmsCart implements Serializable {
+@TableName("oms_shopping_cart")
+@ApiModel(value = "OmsShoppingCart对象", description = "购物车表")
+public class OmsShoppingCart implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
