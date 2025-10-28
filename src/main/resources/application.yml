@@ -63,3 +63,7 @@ secure:
       - /admin/register
       - /admin/info
       - /admin/logout
+      - /customer/login
+      - /customer/register
+      - /customer/info
+      - /customer/logout
