@@ -38,7 +38,7 @@ public class OmsOrder implements Serializable {
     private Long memberId;
 
     @ApiModelProperty("订单状态：0->待付款；1->已付款；2->已发货；3->已完成；4->已关闭")
-    private Boolean status;
+    private Integer status;
 
     @ApiModelProperty("订单总金额")
     private BigDecimal totalAmount;

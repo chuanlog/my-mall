@@ -37,5 +37,5 @@ public interface OmsOrderService extends IService<OmsOrder> {
     /**
      * 分页查询我的订单，可按支付状态筛选
      */
-    Page<OmsOrder> listMy(Boolean status, Integer pageSize, Integer pageNum);
+    Page<OmsOrder> listMy(Integer status, Integer pageSize, Integer pageNum);
 }

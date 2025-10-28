@@ -93,8 +93,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         OmsOrder order = new OmsOrder();
         order.setMemberId(memberId);
         order.setOrderSn(generateOrderSn(memberId, now));
-        // Boolean 类型字段兼容：false 表示未支付/待支付
-        order.setStatus(false);
+        order.setStatus(0); // 待付款
         order.setPayType(false);
         order.setTotalAmount(totalAmount);
         order.setPayAmount(totalAmount);
@@ -157,19 +156,19 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         if (!memberId.equals(order.getMemberId())) {
             throw new IllegalStateException("无权支付该订单");
         }
-        if (Boolean.TRUE.equals(order.getStatus())) {
+        if (order.getStatus() != null && order.getStatus() == 1) {
             throw new IllegalStateException("订单已支付，无需重复支付");
         }
 
         Date now = new Date();
 
-        // 1) 更新订单为已支付（Boolean 字段：true 表示已支付）
-        order.setStatus(true);
-        order.setPayType(true); // 仅占位，Boolean 字段不区分具体支付方式
+        // 更新订单为已支付
+        order.setStatus(1); // 已付款
+        order.setPayType(true);
         order.setUpdateTime(now);
         updateById(order);
 
-        // 2) 写入支付记录
+        // 写入支付记录
         OmsOrderPayment payment = new OmsOrderPayment();
         payment.setOrderId(order.getId());
         payment.setPayAmount(order.getPayAmount() == null ? BigDecimal.ZERO : order.getPayAmount());
@@ -191,25 +190,14 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
         if (!memberId.equals(order.getMemberId())) {
             throw new IllegalStateException("无权取消该订单");
         }
-        if (Boolean.TRUE.equals(order.getStatus())) {
+        if (order.getStatus() != null && order.getStatus() == 1) {
             throw new IllegalStateException("订单已支付，无法取消");
         }
 
-        // 删除子记录：项、地址、支付记录（保障幂等）
-        LambdaQueryWrapper<OmsOrderItem> itemW = new LambdaQueryWrapper<OmsOrderItem>()
-                .eq(OmsOrderItem::getOrderId, orderId);
-        omsOrderItemService.remove(itemW);
-
-        LambdaQueryWrapper<OmsOrderAddress> addrW = new LambdaQueryWrapper<OmsOrderAddress>()
-                .eq(OmsOrderAddress::getOrderId, orderId);
-        omsOrderAddressService.remove(addrW);
-
-        LambdaQueryWrapper<OmsOrderPayment> payW = new LambdaQueryWrapper<OmsOrderPayment>()
-                .eq(OmsOrderPayment::getOrderId, orderId);
-        omsOrderPaymentService.remove(payW);
-
-        // 删除订单本身
-        return removeById(orderId);
+        // 保留订单及其明细与地址，不做级联删除，仅更新状态为已关闭
+        order.setStatus(4); // 已关闭
+        order.setUpdateTime(new Date());
+        return updateById(order);
     }
 
     @Override
@@ -241,7 +229,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderMapper, OmsOrder> i
     }
 
     @Override
-    public Page<OmsOrder> listMy(Boolean status, Integer pageSize, Integer pageNum) {
+    public Page<OmsOrder> listMy(Integer status, Integer pageSize, Integer pageNum) {
         Long memberId = userUtil.getCurrentUserId();
         Page<OmsOrder> page = new Page<>(pageNum == null ? 1 : pageNum, pageSize == null ? 5 : pageSize);
         QueryWrapper<OmsOrder> wrapper = new QueryWrapper<>();

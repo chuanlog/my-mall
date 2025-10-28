@@ -97,10 +97,10 @@ public class OmsOrderController {
         }
     }
 
-    @ApiOperation("我的订单列表（支持按支付状态筛选）")
+    @ApiOperation("我的订单列表（支持按状态筛选：0待付/1已付/4已关闭等）")
     @ResponseBody
     @GetMapping("/list")
-    public CommonResult<CommonPage<OmsOrder>> list(@RequestParam(value = "status", required = false) Boolean status,
+    public CommonResult<CommonPage<OmsOrder>> list(@RequestParam(value = "status", required = false) Integer status,
                                                    @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                    @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
         Page<OmsOrder> page = omsOrderService.listMy(status, pageSize, pageNum);
