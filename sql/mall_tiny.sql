@@ -489,3 +489,20 @@ INSERT INTO `ums_role_resource_relation` VALUES ('230', '5', '42');
 INSERT INTO `ums_role_resource_relation` VALUES ('231', '5', '41');
 INSERT INTO `ums_role_resource_relation` VALUES ('232', '5', '40');
 INSERT INTO `ums_role_resource_relation` VALUES ('233', '5', '39');
+// 用户收货地址表
+DROP TABLE IF EXISTS `ums_member_receive_address`;
+CREATE TABLE `ums_member_receive_address`  (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `member_id` bigint NOT NULL COMMENT '所属用户ID',
+  `name` varchar(64) NOT NULL COMMENT '收货人名称',
+  `phone` varchar(32) NOT NULL COMMENT '收货人电话',
+  `post_code` varchar(16) NULL COMMENT '邮政编码',
+  `province` varchar(64) NULL COMMENT '省份/直辖市',
+  `city` varchar(64) NULL COMMENT '城市',
+  `region` varchar(64) NULL COMMENT '区/县',
+  `detail_address` varchar(255) NOT NULL COMMENT '详细地址',
+  `default_status` int NOT NULL DEFAULT 0 COMMENT '是否默认：0->否；1->是',
+  `create_time` datetime NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_member` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收货地址表';
