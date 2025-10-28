@@ -122,3 +122,14 @@ export const updateAvatarUrlForAdmin = async (adminId, avatarUrl) => {
     throw error;
   }
 };
+
+// 新增：创建后台用户（注册）
+export const createAdmin = async (adminParam) => {
+  try {
+    const response = await http.post('/admin/register', adminParam);
+    return response.data;
+  } catch (error) {
+    console.error('创建用户失败:', error);
+    throw error;
+  }
+};

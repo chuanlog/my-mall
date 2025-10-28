@@ -113,4 +113,11 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper,UmsRole>implem
         adminCacheService.delResourceListByRole(roleId);
         return resourceIds.size();
     }
+
+    @Override
+    public UmsRole getRoleByName(String roleName) {
+        QueryWrapper<UmsRole> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(UmsRole::getName, roleName);
+        return getOne(wrapper);
+    }
 }

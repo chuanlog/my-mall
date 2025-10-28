@@ -55,4 +55,9 @@ public interface UmsRoleService extends IService<UmsRole> {
      */
     @Transactional
     int allocResource(Long roleId, List<Long> resourceIds);
+
+    /**
+     * 根据角色名称获取角色信息
+     */
+    UmsRole getRoleByName(String roleName);
 }

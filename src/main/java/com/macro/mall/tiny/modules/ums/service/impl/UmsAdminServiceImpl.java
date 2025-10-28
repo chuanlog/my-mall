@@ -96,6 +96,22 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper,UmsAdmin> im
         String encodePassword = passwordEncoder.encode(umsAdmin.getPassword());
         umsAdmin.setPassword(encodePassword);
         baseMapper.insert(umsAdmin);
+        
+        // 为新注册用户分配默认角色（普通管理员）
+        if (umsAdmin.getId() != null) {
+            // 使用roleMapper查询"普通管理员"角色
+            QueryWrapper<UmsRole> roleWrapper = new QueryWrapper<>();
+            roleWrapper.lambda().eq(UmsRole::getName, "普通管理员");
+            UmsRole defaultRole = roleMapper.selectOne(roleWrapper);
+            
+            if (defaultRole != null) {
+                UmsAdminRoleRelation roleRelation = new UmsAdminRoleRelation();
+                roleRelation.setAdminId(umsAdmin.getId());
+                roleRelation.setRoleId(defaultRole.getId());
+                adminRoleRelationService.save(roleRelation);
+            }
+        }
+        
         return umsAdmin;
     }
 

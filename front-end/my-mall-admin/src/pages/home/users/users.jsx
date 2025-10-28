@@ -1,10 +1,12 @@
+// 顶部import片段
 import React, { useEffect, useState } from 'react';
 import { Table, Input, Button, Space, Modal, Form, Switch, Select, Avatar, Popconfirm, message } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import './users.css';
 import { 
   listAdmins, getAdminById, updateAdmin, deleteAdmin, 
-  updateAdminStatus, getAdminRoles, updateAdminRole, listAllRoles 
+  updateAdminStatus, getAdminRoles, updateAdminRole, listAllRoles,
+  createAdmin
 } from '../../../api';
 import { uploadAvatarForAdmin, updateAvatarUrlForAdmin } from '../../../api';
 
@@ -27,6 +29,10 @@ export default function UsersPage() {
   const [roleOpen, setRoleOpen] = useState(false);
   const [roles, setRoles] = useState([]);
   const [selectedRoleIds, setSelectedRoleIds] = useState([]);
+
+  // 新增用户相关状态
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createForm] = Form.useForm();
 
   useEffect(() => {
     fetchList();
@@ -247,6 +253,28 @@ export default function UsersPage() {
     }
   };
 
+  // 新增用户相关函数
+  const openCreate = () => {
+    createForm.resetFields();
+    setCreateOpen(true);
+  };
+
+  const submitCreate = async () => {
+    try {
+      const values = await createForm.validateFields();
+      const res = await createAdmin(values);
+      if (res?.code === 200) {
+        message.success('创建成功');
+        setCreateOpen(false);
+        fetchList();
+      } else {
+        message.error(res?.message || '创建失败');
+      }
+    } catch (e) {
+      message.error(e?.response?.data?.message || '网络错误');
+    }
+  };
+
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id', width: 80 },
     { title: '用户名', dataIndex: 'username', key: 'username' },
@@ -293,7 +321,7 @@ export default function UsersPage() {
           style={{ width: 260 }}
         />
         <Button type="primary" icon={<SearchOutlined />} onClick={onSearch}>搜索</Button>
-        <Button icon={<PlusOutlined />} disabled>新增（示例未开放）</Button>
+        <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新增用户</Button>
       </div>
 
       <Table
@@ -366,6 +394,51 @@ export default function UsersPage() {
           onChange={setSelectedRoleIds}
           options={(roles || []).map(r => ({ value: r.id, label: r.name }))}
         />
+      </Modal>
+
+      <Modal
+        title="新增用户"
+        open={createOpen}
+        onOk={submitCreate}
+        onCancel={() => setCreateOpen(false)}
+        okText="创建"
+        cancelText="取消"
+      >
+        <Form form={createForm} layout="vertical">
+          <Form.Item 
+            name="username" 
+            label="用户名" 
+            rules={[{ required: true, message: '请输入用户名' }]}
+          >
+            <Input placeholder="请输入用户名" />
+          </Form.Item>
+          <Form.Item 
+            name="password" 
+            label="密码" 
+            rules={[{ required: true, message: '请输入密码' }]}
+          >
+            <Input.Password placeholder="请输入密码" />
+          </Form.Item>
+          <Form.Item 
+            name="nickName" 
+            label="昵称"
+          >
+            <Input placeholder="请输入昵称" />
+          </Form.Item>
+          <Form.Item 
+            name="email" 
+            label="邮箱"
+            rules={[{ type: 'email', message: '请输入有效的邮箱地址' }]}
+          >
+            <Input placeholder="请输入邮箱" />
+          </Form.Item>
+          <Form.Item 
+            name="icon" 
+            label="头像链接"
+          >
+            <Input placeholder="请输入头像URL" />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );
