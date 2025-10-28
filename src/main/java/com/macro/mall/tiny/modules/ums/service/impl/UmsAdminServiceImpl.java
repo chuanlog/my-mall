@@ -13,6 +13,7 @@ import com.macro.mall.tiny.modules.ums.dto.UmsAdminParam;
 import com.macro.mall.tiny.modules.ums.dto.UpdateAdminPasswordParam;
 import com.macro.mall.tiny.modules.ums.mapper.UmsAdminLoginLogMapper;
 import com.macro.mall.tiny.modules.ums.mapper.UmsAdminMapper;
+import com.macro.mall.tiny.modules.ums.mapper.UmsAdminRoleRelationMapper;
 import com.macro.mall.tiny.modules.ums.mapper.UmsResourceMapper;
 import com.macro.mall.tiny.modules.ums.mapper.UmsRoleMapper;
 import com.macro.mall.tiny.modules.ums.model.*;
@@ -57,6 +58,8 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper,UmsAdmin> im
     private UmsAdminLoginLogMapper loginLogMapper;
     @Autowired
     private UmsAdminRoleRelationService adminRoleRelationService;
+    @Autowired
+    private UmsAdminRoleRelationMapper adminRoleRelationMapper;
     @Autowired
     private UmsRoleMapper roleMapper;
     @Autowired
@@ -172,14 +175,39 @@ public class UmsAdminServiceImpl extends ServiceImpl<UmsAdminMapper,UmsAdmin> im
 
     @Override
     public Page<UmsAdmin> list(String keyword, Integer pageSize, Integer pageNum) {
-        Page<UmsAdmin> page = new Page<>(pageNum,pageSize);
+        Page<UmsAdmin> page = new Page<>(pageNum, pageSize);
         QueryWrapper<UmsAdmin> wrapper = new QueryWrapper<>();
         LambdaQueryWrapper<UmsAdmin> lambda = wrapper.lambda();
-        if(StrUtil.isNotEmpty(keyword)){
-            lambda.like(UmsAdmin::getUsername,keyword);
-            lambda.or().like(UmsAdmin::getNickName,keyword);
+        
+        // 先查询"普通用户"角色ID
+        QueryWrapper<UmsRole> roleWrapper = new QueryWrapper<>();
+        roleWrapper.lambda().eq(UmsRole::getName, "普通用户");
+        UmsRole normalUserRole = roleMapper.selectOne(roleWrapper);
+        
+        if (normalUserRole != null) {
+            // 查询所有拥有"普通用户"角色的用户ID
+            QueryWrapper<UmsAdminRoleRelation> relationWrapper = new QueryWrapper<>();
+            relationWrapper.lambda().eq(UmsAdminRoleRelation::getRoleId, normalUserRole.getId());
+            List<UmsAdminRoleRelation> normalUserRelations = adminRoleRelationMapper.selectList(relationWrapper);
+            
+            if (!normalUserRelations.isEmpty()) {
+                // 提取普通用户的ID列表
+                List<Long> normalUserIds = normalUserRelations.stream()
+                        .map(UmsAdminRoleRelation::getAdminId)
+                        .collect(java.util.stream.Collectors.toList());
+                
+                // 排除普通用户ID
+                lambda.notIn(UmsAdmin::getId, normalUserIds);
+            }
         }
-        return page(page,wrapper);
+        
+        // 添加关键字搜索条件
+        if (StrUtil.isNotEmpty(keyword)) {
+            lambda.and(w -> w.like(UmsAdmin::getUsername, keyword)
+                    .or().like(UmsAdmin::getNickName, keyword));
+        }
+        
+        return page(page, wrapper);
     }
 
     @Override
