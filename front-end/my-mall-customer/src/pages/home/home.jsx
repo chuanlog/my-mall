@@ -47,17 +47,6 @@ export default function Home() {
           defaultSelectedKeys={['/home/course']}
           onClick={({ key }) => navigate(key)}
           items={[
-            {
-              key: '/home/course',
-              icon: <UserOutlined />,
-              label: '课程管理',
-            },
-            {
-              key: '/home/plan',
-              icon: <VideoCameraOutlined />,
-              label: '培养计划',
-              
-            },
           ]}
         />
       </Sider>
