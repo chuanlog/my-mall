@@ -4,8 +4,10 @@ import { ShoppingCartOutlined, GiftOutlined, StarOutlined, CrownOutlined } from 
 import './HomePage.css';
 
 const { Title, Paragraph } = Typography;
+import { useNavigate } from 'react-router';
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
     <div className="homepage">
       <div className="hero-section">
@@ -16,7 +18,12 @@ export default function HomePage() {
           <Paragraph className="hero-description">
             发现优质商品，享受购物乐趣
           </Paragraph>
-          <Button type="primary" size="large" icon={<ShoppingCartOutlined />}>
+          <Button
+            type="primary"
+            size="large"
+            icon={<ShoppingCartOutlined />}
+            onClick={() => navigate('/home/products')}
+          >
             开始购物
           </Button>
         </div>
@@ -80,7 +87,7 @@ export default function HomePage() {
           <Paragraph>
             浏览我们的商品分类，发现您喜欢的商品
           </Paragraph>
-          <Button type="primary" size="large">
+          <Button type="primary" size="large" onClick={() => navigate('/home/products')}>
             浏览商品
           </Button>
         </Card>

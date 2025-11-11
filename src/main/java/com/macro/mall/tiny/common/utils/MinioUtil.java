@@ -39,6 +39,9 @@ public class MinioUtil {
     @Value("${minio.bucketName}")
     private String bucketName;
 
+    @Value("${minio.endpoint}")
+    private String endpoint;
+
     /**
      * 检查桶是否存在
      *
@@ -337,25 +340,30 @@ public class MinioUtil {
     }
 
     /**
-     * 获取文件访问URL
+     * 获取文件访问URL（永久公开）
      *
      * @param objectName 对象名称
      * @return 文件访问URL
      */
     public String getFileUrl(String objectName) {
         try {
-            return minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
-                            .bucket(bucketName)
-                            .object(objectName)
-                            .expiry(7, TimeUnit.DAYS) // 7天有效期
-                            .build()
-            );
+            return buildPublicUrl(objectName);
         } catch (Exception e) {
             log.error("获取文件URL失败: {}", e.getMessage());
             throw new RuntimeException("获取文件URL失败: " + e.getMessage());
         }
+    }
+
+    /**
+     * 根据 endpoint/bucketName/objectName 构建公开访问 URL
+     */
+    private String buildPublicUrl(String objectName) {
+        String base = endpoint;
+        if (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
+        }
+        String obj = objectName.startsWith("/") ? objectName.substring(1) : objectName;
+        return base + "/" + bucketName + "/" + obj;
     }
 
     /**

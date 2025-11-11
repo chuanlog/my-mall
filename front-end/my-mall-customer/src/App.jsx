@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import User from './pages/user/user.jsx'
 import Home from './pages/home/home.jsx'
 import HomePage from './pages/home/HomePage.jsx'
+import ProductsPage from './pages/home/ProductsPage.jsx'
 import axios from 'axios'
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
         <Route path="/user" element={<User/>} />
         <Route path="/home" element={<Home/>} >
           <Route index element={<HomePage />} />
-          <Route path="products" element={<div>商品管理页面（待开发）</div>} />
+          <Route path="products" element={<ProductsPage />} />
           <Route path="profile" element={<div>个人中心页面（待开发）</div>} />
         </Route>
       </Routes>
