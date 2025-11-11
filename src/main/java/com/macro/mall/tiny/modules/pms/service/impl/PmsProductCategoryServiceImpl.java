@@ -148,26 +148,6 @@ public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategor
         }
     }
 
-    @Override
-    public boolean updateImage(Long categoryId, String imageUrl) {
-        try {
-            PmsProductCategory category = getById(categoryId);
-            if (category == null) {
-                return false;
-            }
-            // 删除旧图片（如果存在且属于本模块路径）
-            if (cn.hutool.core.util.StrUtil.isNotBlank(category.getImage())) {
-                String oldObjectName = extractObjectNameFromUrl(category.getImage(), "images/category/");
-                if (cn.hutool.core.util.StrUtil.isNotBlank(oldObjectName)) {
-                    minioUtil.deleteFile(oldObjectName);
-                }
-            }
-            category.setImage(imageUrl);
-            return updateById(category);
-        } catch (Exception e) {
-            return false;
-        }
-    }
 
     private String extractObjectNameFromUrl(String url, String prefix) {
         if (cn.hutool.core.util.StrUtil.isBlank(url)) {

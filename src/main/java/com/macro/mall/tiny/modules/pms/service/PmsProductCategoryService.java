@@ -29,13 +29,7 @@ public interface PmsProductCategoryService extends IService<PmsProductCategory> 
      */
     String uploadImage(Long categoryId, org.springframework.web.multipart.MultipartFile file);
 
-    /**
-     * 更新商品分类图片
-     * @param categoryId 分类ID
-     * @param imageUrl 图片URL
-     * @return 是否成功
-     */
-    boolean updateImage(Long categoryId, String imageUrl);
+
 
     // 新增：带缓存的获取与更新，及列表缓存
     PmsProductCategory getCategoryById(Long id);

@@ -9,7 +9,7 @@ import {
   getProductCategoryById,
   updateProductCategoryStatus,
   uploadProductCategoryImage,
-  updateProductCategoryImage
+  // 移除：updateProductCategoryImage
 } from '../../../api/productCategory';
 
 export default function ProductCategoriesPage() {
@@ -147,16 +147,16 @@ export default function ProductCategoriesPage() {
   const submitImage = async () => {
     if (!currentItem?.id) return;
     try {
-      if (imageFile) {
-        const res = await uploadProductCategoryImage(currentItem.id, imageFile);
-        if (res?.code !== 200) throw new Error(res?.message || '上传失败');
+      // 仅支持上传文件
+      if (!imageFile) {
+        message.warning('请先选择要上传的图片文件');
+        return;
       }
-      const imageUrl = imageForm.getFieldValue('imageUrl');
-      if (imageUrl) {
-        const res2 = await updateProductCategoryImage(currentItem.id, imageUrl);
-        if (res2?.code !== 200) throw new Error(res2?.message || '更新失败');
+      const res = await uploadProductCategoryImage(currentItem.id, imageFile);
+      if (res?.code !== 200) {
+        throw new Error(res?.message || '上传失败');
       }
-      message.success('图片已处理');
+      message.success('图片上传成功');
       setImageModalOpen(false);
       fetchList();
     } catch (e) {

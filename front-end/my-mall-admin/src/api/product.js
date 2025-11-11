@@ -51,15 +51,7 @@ export const uploadProductImage = async (id, file) => {
   return response.data;
 };
 
-// 商品：更新图片
-export const updateProductImage = async (id, imageUrl) => {
-  const response = await http.post(`/pms/product/image/update/${id}`, null, {
-    params: { imageUrl },
-  });
-  return response.data;
-};
-
-// 分类：用于商品页筛选
+// 移除：updateProductImage
 export const listAllProductCategories = async () => {
   const response = await http.get('/pms/productCategory/listAll');
   return response.data;

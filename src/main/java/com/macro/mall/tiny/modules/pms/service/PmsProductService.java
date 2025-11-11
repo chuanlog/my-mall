@@ -30,14 +30,6 @@ public interface PmsProductService extends IService<PmsProduct> {
      */
     String uploadImage(Long productId, org.springframework.web.multipart.MultipartFile file);
 
-    /**
-     * 更新商品图片
-     * @param productId 商品ID
-     * @param imageUrl 图片URL
-     * @return 是否成功
-     */
-    boolean updateImage(Long productId, String imageUrl);
-
     // 新增：带缓存的获取与更新
     PmsProduct getProductById(Long id);
     boolean updateProduct(Long id, PmsProduct product);

@@ -124,20 +124,6 @@ public class PmsProductCategoryController {
         }
     }
 
-    @ApiOperation("更新商品分类图片")
-    @RequestMapping(value = "/image/update/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public CommonResult updateImage(@PathVariable Long id,
-                                                                   @RequestParam("imageUrl") String imageUrl) {
-        try {
-            boolean success = categoryService.updateImage(id, imageUrl);
-            if (success) {
-                return CommonResult.success(null, "图片更新成功");
-            }
-            return CommonResult.failed("图片更新失败");
-        } catch (Exception e) {
-            return CommonResult.failed("图片更新失败: " + e.getMessage());
-        }
-    }
+
 }
 

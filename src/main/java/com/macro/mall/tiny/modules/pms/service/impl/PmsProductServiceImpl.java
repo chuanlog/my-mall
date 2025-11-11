@@ -111,27 +111,6 @@ public class PmsProductServiceImpl extends ServiceImpl<PmsProductMapper, PmsProd
         }
     }
 
-    @Override
-    public boolean updateImage(Long productId, String imageUrl) {
-        try {
-            PmsProduct product = getById(productId);
-            if (product == null) {
-                return false;
-            }
-            // 删除旧图片（如果存在且属于本模块路径）
-            if (cn.hutool.core.util.StrUtil.isNotBlank(product.getImage())) {
-                String oldObjectName = extractObjectNameFromUrl(product.getImage(), "images/product/");
-                if (cn.hutool.core.util.StrUtil.isNotBlank(oldObjectName)) {
-                    minioUtil.deleteFile(oldObjectName);
-                }
-            }
-            product.setImage(imageUrl);
-            return updateById(product);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private String extractObjectNameFromUrl(String url, String prefix) {
         if (cn.hutool.core.util.StrUtil.isBlank(url)) {
             return null;

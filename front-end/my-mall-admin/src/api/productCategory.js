@@ -58,9 +58,4 @@ export const uploadProductCategoryImage = async (id, file) => {
 };
 
 // 分类：更新图片
-export const updateProductCategoryImage = async (id, imageUrl) => {
-  const response = await http.post(`/pms/productCategory/image/update/${id}`, null, {
-    params: { imageUrl },
-  });
-  return response.data;
-};
+// 移除：updateProductCategoryImage
