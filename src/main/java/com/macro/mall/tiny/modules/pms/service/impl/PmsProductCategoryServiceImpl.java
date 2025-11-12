@@ -63,7 +63,7 @@ public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategor
         Page<PmsProductCategory> page = new Page<>(pageNum, pageSize);
         QueryWrapper<PmsProductCategory> wrapper = new QueryWrapper<>();
         LambdaQueryWrapper<PmsProductCategory> lambda = wrapper.lambda();
-        if (cn.hutool.core.util.StrUtil.isNotEmpty(keyword)) {
+        if (StrUtil.isNotEmpty(keyword)) {
             lambda.like(PmsProductCategory::getName, keyword);
         }
         lambda.orderByAsc(PmsProductCategory::getSort).orderByDesc(PmsProductCategory::getUpdateTime);
@@ -133,9 +133,9 @@ public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategor
             String url = minioUtil.uploadFile(file, objectName);
 
             // 删除旧图片（如果存在且属于本模块路径）
-            if (cn.hutool.core.util.StrUtil.isNotBlank(category.getImage())) {
+            if (StrUtil.isNotBlank(category.getImage())) {
                 String oldObjectName = extractObjectNameFromUrl(category.getImage(), "images/category/");
-                if (cn.hutool.core.util.StrUtil.isNotBlank(oldObjectName)) {
+                if (StrUtil.isNotBlank(oldObjectName)) {
                     minioUtil.deleteFile(oldObjectName);
                 }
             }
@@ -150,7 +150,7 @@ public class PmsProductCategoryServiceImpl extends ServiceImpl<PmsProductCategor
 
 
     private String extractObjectNameFromUrl(String url, String prefix) {
-        if (cn.hutool.core.util.StrUtil.isBlank(url)) {
+        if (StrUtil.isBlank(url)) {
             return null;
         }
         int index = url.indexOf(prefix);
