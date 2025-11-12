@@ -17,7 +17,8 @@ export default function ProductsPage() {
     keyword: '',
     categoryId: undefined,
     pageSize: 12,
-    pageNum: 1
+    pageNum: 1,
+    status: 1
   });
 
   useEffect(() => {
