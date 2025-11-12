@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Input, Select, Pagination, Tag, Button, Empty, message, Spin } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { fetchProducts, fetchCategories, addToCart } from '../../api/product';
+import { fetchProducts, fetchCategories, addToCart } from '../../../api/product';
 import './ProductsPage.css';
 
 const { Meta } = Card;
@@ -30,7 +30,7 @@ export default function ProductsPage() {
           message.error(res.message || '获取分类失败');
         }
       } catch (e) {
-        message.error('获取分类失败');
+        message.error('获取分类失败', e);
       }
     };
     loadCategories();
@@ -49,7 +49,7 @@ export default function ProductsPage() {
           message.error(res.message || '获取商品列表失败');
         }
       } catch (e) {
-        message.error('获取商品列表失败');
+        message.error('获取商品列表失败', e);
       } finally {
         setLoading(false);
       }
@@ -78,7 +78,7 @@ export default function ProductsPage() {
         message.error(res.message || '添加到购物车失败');
       }
     } catch (e) {
-      message.error('添加到购物车失败');
+      message.error('添加到购物车失败', e);
     }
   };
 

@@ -2,8 +2,8 @@ import './App.css'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import User from './pages/user/user.jsx'
 import Home from './pages/home/home.jsx'
-import HomePage from './pages/home/HomePage.jsx'
-import ProductsPage from './pages/home/ProductsPage.jsx'
+import HomePage from './pages/home/Home/HomePage.jsx'
+import ProductsPage from './pages/home/Products/ProductsPage.jsx'
 import axios from 'axios'
 
 function App() {

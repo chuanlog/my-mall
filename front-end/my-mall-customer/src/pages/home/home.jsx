@@ -5,10 +5,12 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  HomeOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme,Popover,Avatar } from 'antd';
 import './home.css'
-import { useNavigate,Outlet } from "react-router";
+import { useNavigate,Outlet, useLocation } from "react-router";
 const { Header, Sider, Content } = Layout;
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false);
@@ -16,6 +18,7 @@ export default function Home() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+  const location = useLocation();
   const username=localStorage.getItem("username");
 
   const handleLogout = () => {
@@ -44,9 +47,12 @@ export default function Home() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['/home/course']}
+          selectedKeys={[location.pathname]}
           onClick={({ key }) => navigate(key)}
           items={[
+            { key: '/home', icon: <HomeOutlined />, label: '首页' },
+            { key: '/home/products', icon: <ShoppingCartOutlined />, label: '商品' },
+            { key: '/home/profile', icon: <UserOutlined />, label: '个人中心' }
           ]}
         />
       </Sider>
